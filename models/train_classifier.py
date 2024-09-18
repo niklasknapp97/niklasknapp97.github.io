@@ -1,24 +1,100 @@
 import sys
+import pandas as pd
+from sqlalchemy import create_engine
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.pipeline import Pipeline
+from sklearn.naive_bayes import MultinomialNB 
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.metrics import classification_report
+import pickle
+import nltk
+from nltk.tokenize import word_tokenize
 
 
 def load_data(database_filepath):
-    pass
+    """
+    Loads data from the SQLite database.
+
+    Args:
+        database_filepath (str): Path to the SQLite database file.
+
+    Returns:
+        X (pd.Series): Feature data (text).
+        Y (pd.DataFrame): Labels (categories).
+        category_names (list): List of category names for classification.
+    """
+    engine = create_engine(f'sqlite:///{database_filepath}')
+    df = pd.read_sql_table('messages', engine)
+    X = df['message']  # Assuming 'message' column contains the text
+    Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)  # Drop non-label columns
+    category_names = Y.columns
+    return X, Y, category_names
 
 
 def tokenize(text):
-    pass
+    """
+    Tokenizes text data.
+
+    Args:
+        text (str): The text to tokenize.
+
+    Returns:
+        list: List of tokens.
+    """
+    tokens = word_tokenize(text)
+    return tokens
 
 
 def build_model():
-    pass
+    """
+    Builds a machine learning pipeline and performs a grid search.
+
+    Returns:
+        GridSearchCV: The machine learning model with grid search.
+    """
+    pipeline = Pipeline([
+        ('tfidf', TfidfVectorizer(tokenizer=tokenize)),
+        ('clf', MultiOutputClassifier(MultinomialNB()))
+    ])
+
+    # Parameter grid for GridSearchCV
+    param_grid = {
+        'tfidf__ngram_range': [(1, 1), (1, 2)],
+        'clf__estimator__alpha': [0.1, 1, 10]
+    }
+
+    # Grid search
+    model = GridSearchCV(pipeline, param_grid, cv=5, verbose=3, n_jobs=-1)
+    return model
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    """
+    Evaluates the model performance on test data.
+
+    Args:
+        model: Trained machine learning model.
+        X_test (pd.Series): Test data features.
+        Y_test (pd.DataFrame): Test data labels.
+        category_names (list): List of category names for classification.
+    """
+    Y_pred = model.predict(X_test)
+    for i, category in enumerate(category_names):
+        print(f'Category: {category}\n')
+        print(classification_report(Y_test.iloc[:, i], Y_pred[:, i]))
 
 
 def save_model(model, model_filepath):
-    pass
+    """
+    Saves the trained model as a pickle file.
+
+    Args:
+        model: Trained machine learning model.
+        model_filepath (str): Path to save the pickle file.
+    """
+    with open(model_filepath, 'wb') as f:
+        pickle.dump(model, f)
 
 
 def main():
