@@ -11,6 +11,9 @@ import pickle
 import nltk
 from nltk.tokenize import word_tokenize
 
+import re
+nltk.download('punkt_tab')
+
 
 def load_data(database_filepath):
     """
@@ -26,7 +29,7 @@ def load_data(database_filepath):
     """
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table('messages', engine)
-    X = df['message']  # Assuming 'message' column contains the text
+    X = df['message'].astype(str)
     Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)  # Drop non-label columns
     category_names = Y.columns
     return X, Y, category_names
@@ -34,15 +37,19 @@ def load_data(database_filepath):
 
 def tokenize(text):
     """
-    Tokenizes text data.
+    Tokenizes text data and normalizes it (lowercasing, removing punctuation, etc.).
 
     Args:
-        text (str): The text to tokenize.
+        text (str): Input text to tokenize.
 
     Returns:
-        list: List of tokens.
+        list: A list of cleaned and tokenized words.
     """
+    # Normalization: Lowercase, remove punctuation, etc.
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())  # Remove non-alphabetic characters
     tokens = word_tokenize(text)
+    
+    # Optionally, you can remove stopwords and apply stemming/lemmatization
     return tokens
 
 
@@ -53,8 +60,13 @@ def build_model():
     Returns:
         GridSearchCV: The machine learning model with grid search.
     """
+    #pipeline = Pipeline([
+    #    ('tfidf', TfidfVectorizer(tokenizer=tokenize)),
+    #    ('clf', MultiOutputClassifier(MultinomialNB()))
+    #])
+
     pipeline = Pipeline([
-        ('tfidf', TfidfVectorizer(tokenizer=tokenize)),
+        ('tfidf', TfidfVectorizer(tokenizer=tokenize, token_pattern=None)),  # Set token_pattern=None
         ('clf', MultiOutputClassifier(MultinomialNB()))
     ])
 
@@ -65,8 +77,9 @@ def build_model():
     }
 
     # Grid search
-    model = GridSearchCV(pipeline, param_grid, cv=5, verbose=3, n_jobs=-1)
-    return model
+    #model = GridSearchCV(pipeline, param_grid, cv=5, verbose=3, n_jobs=-1)
+    #return model
+    return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -103,6 +116,8 @@ def main():
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+
+        print(X.head())
         
         print('Building model...')
         model = build_model()
