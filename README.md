@@ -1,93 +1,88 @@
-![Cinema](img/title_image.png)
+# Analysis of correlations between weather events / infrastructure impact and aid types
 
-# Data Analysis of AirBnB reviews
+## Project Overview
 
-This document outlines the analysis performed on a DataFrame with reviews on Airbnb listings. It contains the following columns: `listing_id`, `id`, `date`, `reviewer_id`, `reviewer_name`, `comments`. The analyses include visualizations to help understand the data better.
+This project is designed to build an end-to-end pipeline for disaster response messages. The aim is to categorize incoming messages into appropriate disaster response categories to help organizations quickly route requests to the appropriate teams. The project consists of three main components: an ETL pipeline, a machine learning pipeline, and a Flask web app for data visualization and user interaction.
 
-## Motivation
+## Project Components
 
-The goal of this report is to create an understanding for the the reviews of Airbnb listings.
+### 1. **ETL Pipeline**
+The ETL (Extract, Transform, Load) pipeline is responsible for processing and cleaning the data from two datasets: messages and categories. The cleaned data is stored in a SQLite database for further use in the machine learning pipeline.
 
-## View the Analysis
+- **Script**: `process_data.py`
+- **Steps**:
+  1. Load the messages and categories datasets from CSV files.
+  2. Merge the two datasets.
+  3. Clean the data by:
+     - Splitting categories into individual columns.
+     - Converting category values to binary.
+     - Removing duplicates and handling missing data.
+  4. Save the cleaned data to a SQLite database.
 
-[View Analysis Report](analysis.md)
+### 2. **ML Pipeline**
+The machine learning pipeline builds a text classification model to categorize disaster response messages. It leverages natural language processing (NLP) and machine learning algorithms to train and evaluate the model.
 
-## Libraries used
+- **Script**: `train_classifier.py`
+- **Steps**:
+  1. Load data from the SQLite database.
+  2. Split the dataset into training and testing sets.
+  3. Build a text processing and classification pipeline using `CountVectorizer`, `TfidfTransformer`, and `RandomForestClassifier`.
+  4. Tune hyperparameters using `GridSearchCV`.
+  5. Train and evaluate the model on the test set.
+  6. Export the final model as a pickle file (`classifier.pkl`).
 
-* Pandas
-* Matplotlib
-* Seaborn
-* Wordcloud
+### 3. **Flask Web App**
+The web application allows users to input new disaster messages and receive classification results. Additionally, the web app displays data visualizations using Plotly to provide insights into the disaster categories and message types.
 
-## Files
+- **Files**:
+  - `app.py`: Flask web server
+  - `templates/master.html`: HTML template for the app layout
+  - `static/style.css`: Custom CSS for the app styling
+- **Steps**:
+  1. Modify file paths to connect the app with the SQLite database and the trained model.
+  2. Display interactive data visualizations using Plotly. Examples include:
+     - A bar chart showing the distribution of aid request types.
+     - A heatmap showing the correlation between different aid categories.
 
-* analysis_files/
-  * exported pictures of the diagrams
-* data/
-  * reviews.csv: The CSV-file containing the data
-* img/
-  * images
-* analysis.jpynb: The Jupyter notebook containing the code
-* anaysis.md: The markdown file exported from the jupyter notebook
-* reviews.csv:
+## Data Visualizations
 
+The web app includes several interactive data visualizations created using Plotly:
 
-## Data Analysis
+1. **Barchart: Distribution of Aid Requests**
+   - This bar chart displays the frequency of different types of aid requests in the dataset. It helps identify the most commonly requested aid types (e.g., medical help, shelter, food, etc.).
 
-### 1. Distribution of Reviews by Listing
+2. **Barchart: Distribution of Infrastructure Impact**
+   - This chart shows the distribution of impacts on various types of infrastructure (e.g., transport, electricity, hospitals, etc.). It highlights how different disasters impact critical infrastructure and which types are most affected.
 
-**Objective:** Visualize the number of reviews each listing has received.
+3. **Barchart: Distribution of Weather Events**
+   - This visualization displays the frequency of various weather events (e.g., floods, storms, fires, earthquakes). It helps in understanding which weather events are most prevalent in the dataset.
 
-**Diagram:**
+4. **Piechart: Frequency of Aid Requests by Message Type**
+   - This pie chart shows the distribution of messages by genre (e.g., direct, news, social). It provides insights into how people communicate disaster-related information across different media types.
 
-![png](analysis_files/analysis_9_0.png)
+5. **Heatmap: Correlation Matrix of Aid Requests**
+   - This heatmap visualizes the correlation between different types of aid requests. It helps identify potential relationships between various aid categories (e.g., if requests for shelter often coincide with requests for food).
 
-**Findings:** This gives a good insight how many reviews there are per listing.
+6. **Heatmap: Correlation Between Weather Events and Aid Types**
+   - This heatmap shows the correlation between specific weather events and the types of aid requested in response to those events. It provides insight into how different disasters impact aid needs.
 
-### 2. Distribution of Reviews over time
+7. **Heatmap: Correlation Between Infrastructure Impact and Aid Types**
+   - This heatmap explores the relationship between infrastructure impacts (e.g., transport, electricity) and the types of aid requested. It helps identify patterns in how infrastructure damage drives specific aid requests.
 
-**Objective:** Visualize the number of reviews over time
+## Project Setup
 
-**Diagram:**
+### Prerequisites
+Make sure you have the following libraries installed:
+- Python 3.x
+- Flask
+- Pandas
+- NumPy
+- Scikit-learn
+- SQLAlchemy
+- NLTK
+- Plotly
+- Joblib
 
-![png](analysis_files/analysis_11_0.png)
-
-**Finding:** The number of reviews has increased drastically over the last years and there is a peak of reviews towards the end of each year.
-
-### 3. Review Counts by Reviewer
-
-**Objective:** Determine the distribution of the number of reviews written by each of the top ten reviewers.
-
-**Diagram:**
-
-![png](analysis_files/analysis_13_0.png)
-
-**Finding:** The top reviewer has more than double the reviews of the number ten reviewer.
-
-### 4. Temporal Distribution of Reviews
-
-**Objective:** Analyze the distribution of reviews over time.
-
-**Diagram:**
-
-![png](analysis_files/analysis_15_0.png)
-
-**Finding:** The by far most listings have very few reviews, only a few listings have lots of reviews.
-
-### 5. Common Words in Comments
-
-**Objective:** Identify the most frequently occurring words in the comments.
-
-**Diagram:**
-
-![png](analysis_files/analysis_17_0.png)
-
-**Findings:** The most often used words don't have anything in common except that they are related to travel, which is kind of expected. The most often visited city in this dataset seems to be Seattle.
-
-## View the Analysis
-
-[View Analysis Report](analysis.md)
-
-## Conclusion
-
-These analyses provide insights into the distribution and characteristics of the reviews dataset. Use the diagrams to gain a deeper understanding of review patterns and trends.
+You can install the required libraries by running:
+```bash
+pip install -r requirements.txt

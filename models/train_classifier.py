@@ -13,6 +13,7 @@ from nltk.tokenize import word_tokenize
 
 import re
 nltk.download('punkt_tab')
+nltk.download('wordnet')
 
 
 def load_data(database_filepath):
@@ -60,11 +61,6 @@ def build_model():
     Returns:
         GridSearchCV: The machine learning model with grid search.
     """
-    #pipeline = Pipeline([
-    #    ('tfidf', TfidfVectorizer(tokenizer=tokenize)),
-    #    ('clf', MultiOutputClassifier(MultinomialNB()))
-    #])
-
     pipeline = Pipeline([
         ('tfidf', TfidfVectorizer(tokenizer=tokenize, token_pattern=None)),  # Set token_pattern=None
         ('clf', MultiOutputClassifier(MultinomialNB()))
@@ -77,9 +73,9 @@ def build_model():
     }
 
     # Grid search
-    #model = GridSearchCV(pipeline, param_grid, cv=5, verbose=3, n_jobs=-1)
-    #return model
-    return pipeline
+    model = GridSearchCV(pipeline, param_grid, cv=5, verbose=3, n_jobs=-1)
+    return model
+    #return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
