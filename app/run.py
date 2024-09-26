@@ -97,25 +97,7 @@ def index():
 
     help_heatmap.update_layout(title='Correlation matrix of aid requests')
 
-    # 6. Heatmap of aid types vs. weather events
-    # Create an aggregated table of sums for each combination of weather and aid type
-    weather_help = data[weather_columns].T.dot(data[help_columns])
-
-    # Create a heatmap for the correlations between weather events and aid types
-    help_weather_heatmap = graph.Figure(data=graph.Heatmap(
-        z=weather_help.values,
-        x=weather_help.columns,
-        y=weather_help.index,
-        colorscale='Viridis'
-    ))
-
-    help_weather_heatmap.update_layout(
-        title='Correlation between weather events and aid types',
-        xaxis_title='Aid types',
-        yaxis_title='Weather events'
-    )
-
-    # 7. Heatmap of aid types vs. infrastructure impact
+    # 6. Heatmap of aid types vs. infrastructure impact
     # Create an aggregated table of sums for each combination of infrastructure and aid type
     infrastructure_help = data[infrastructure_columns].T.dot(data[help_columns])
 
@@ -133,8 +115,26 @@ def index():
         yaxis_title='Infrastructure impact'
     )
 
+    # 7. Heatmap of aid types vs. weather events
+    # Create an aggregated table of sums for each combination of weather and aid type
+    weather_help = data[weather_columns].T.dot(data[help_columns])
+
+    # Create a heatmap for the correlations between weather events and aid types
+    help_weather_heatmap = graph.Figure(data=graph.Heatmap(
+        z=weather_help.values,
+        x=weather_help.columns,
+        y=weather_help.index,
+        colorscale='Viridis'
+    ))
+
+    help_weather_heatmap.update_layout(
+        title='Correlation between weather events and aid types',
+        xaxis_title='Aid types',
+        yaxis_title='Weather events'
+    )
+
     # Create the visualizations
-    graphs = [bar_fig_aid, bar_fig_infra, bar_fig_weather, pie_fig, help_heatmap, help_weather_heatmap, help_infrastructure_heatmap]
+    graphs = [bar_fig_aid, bar_fig_infra, bar_fig_weather, pie_fig, help_heatmap, help_infrastructure_heatmap, help_weather_heatmap]
     
     # Encode Plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]

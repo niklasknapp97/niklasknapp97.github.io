@@ -1,0 +1,25 @@
+# Python Standard Library
+# No need to include sys, json, re as they are part of the standard library.
+
+# Data manipulation and analysis
+pandas==1.5.3
+
+# SQLAlchemy for database interactions
+sqlalchemy==1.4.47
+
+# Scikit-learn for machine learning
+scikit-learn==1.1.3
+
+# NLTK for natural language processing
+nltk==3.7
+
+# Pickle is part of the standard library, no need to include it.
+
+# Flask for web framework
+Flask==2.2.2
+
+# Plotly for data visualization
+plotly==5.11.0
+
+# Joblib for model serialization
+joblib==1.1.0
