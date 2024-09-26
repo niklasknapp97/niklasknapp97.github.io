@@ -67,35 +67,35 @@ The web app includes seven interactive data visualizations created using Plotly:
 1. **Barchart: Distribution of Aid Requests**
    - This bar chart displays the frequency of different types of aid requests in the dataset. It helps identify the most commonly requested aid types (e.g., medical help, shelter, food, etc.):
 
-   ![Distribution of Aid Requests](img/title%20image.webp)
+   ![Distribution of Aid Requests](img/dist_aid.png)
 
    Here we can see, that there are lots of unclassified aid requests only stating "other_aid". As expected food, medical aid, shelter and water are among the most often requested aids. In the datasets there was no aid requested for a missing_child.
 
 2. **Barchart: Distribution of Infrastructure Impact**
    - This chart shows the distribution of impacts on various types of infrastructure (e.g., transport, electricity, hospitals, etc.). It highlights how different disasters impact critical infrastructure and which types are most affected:
 
-   ![Distribution of Infrastructure Impact](img/title%20image.webp)
+   ![Distribution of Infrastructure Impact](img/dist_inf.png)
 
    It shows that here are also a lot of unclassified infrastructure impacts only referred to as "other_infrastructure". As expected the generic class "building" is impacted most often.
 
 3. **Barchart: Distribution of Weather Events**
    - This visualization displays the frequency of various weather events (e.g., floods, storms, fires, earthquakes). It helps in understanding which weather events are most prevalent in the dataset:
 
-   ![Distribution of Weather Events](img/title%20image.webp)
+   ![Distribution of Weather Events](img/dist_wea.png)
 
    Here we learn, that there are far more earthquakes and storms than fires causing disasters.
 
 4. **Piechart: Frequency of Aid Requests by Message Type**
    - This pie chart shows the distribution of messages by genre (e.g., direct, news, social). It provides insights into how people communicate disaster-related information across different media types:
 
-   ![Frequency of Aid Requests by Message Type](img/title%20image.webp)
+   ![Frequency of Aid Requests by Message Type](img/pie.png)
 
    What is expected here is that there are far more aids requested directly that via social contacts or media. What is surprising is, that there are even more aids requested via news.
 
 5. **Heatmap: Correlation Matrix of Aid Requests**
    - This heatmap visualizes the correlation between different types of aid requests. It helps identify potential relationships between various aid categories (e.g., if requests for shelter often coincide with requests for food):
 
-   ![Correlation Matrix of Aid Requests](img/title%20image.webp)
+   ![Correlation Matrix of Aid Requests](img/corr_aid.png)
 
    This shows that the strongest correlations are between "food" and "water" and between "medical help" and "medical products", what is kind of trivial. Other strong relations are between "water" and "medical products", between "food" and "shelter" and between "search and rescue" and "missing people".
 
@@ -117,7 +117,7 @@ The web app includes seven interactive data visualizations created using Plotly:
 7. **Heatmap: Correlation Between Weather Events and Aid Types**
    - This heatmap shows the correlation between specific weather events and the types of aid requested in response to those events. It provides insight into how different disasters impact aid needs:
 
-   ![Correlation Between Weather Events and Aid Types](img/title%20image.webp)
+   ![Correlation Between Weather Events and Aid Types](img/dist_wea.png)
 
    Since "other_aid" is not classified it is hard to learn something from this.
 
